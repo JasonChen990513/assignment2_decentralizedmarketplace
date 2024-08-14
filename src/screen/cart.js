@@ -85,17 +85,16 @@ function Cart () {
         }
 
         return (<div key={index} className=" flex gap-2 p-2 m-2 cursor-pointer">
-            <div className=" flex gap-2 content-center items-center">
+            <div className=" flex gap-2 content-center items-center w-full justify-between">
                 <input type="checkbox" onChange={() => checkOutList(ID)}/>
-                <section className=" flex flex-col gap-2 content-center items-center" onClick={() => navigate(`/good/${ID}`)}>
-                    <div>ID: {ID}</div>
-                    <div>Amount: {amount}</div>
-                    <div>Name: {goods[ID].name}</div>
-                    <div>Price: {Number(goods[ID].price)}</div>
+                <section className=" flex gap-2 content-center items-center" onClick={() => navigate(`/good/${ID}`)}>
                     <img src={goods[ID].image} className="w-20 h-20"/>
-                    <div>Category: {goods[ID].categories}</div>
-                    <div>{sellStatus}</div>
                 </section>
+
+                <div>{goods[ID].name}</div>
+                <div>Price: {Number(goods[ID].price)}</div>
+
+                <div>Amount: {amount}</div>
                 <button className="border border-black rounded-xl w-fit px-3 py-2" onClick={()=>handleCancel(ID)} >Cancel</button>
             </div>
         </div>)
@@ -103,6 +102,9 @@ function Cart () {
 
     const checkOutGoods = async () => {
         const { signer } = await connectWallet();
+        //get approve
+
+        //check
         const contract = getContract(signer);
         await contract.cartCheckOut(checkOut);
     }
@@ -112,7 +114,7 @@ function Cart () {
     return (
         <div className="flex flex-col text-center items-center">
             <h1>Cart</h1>
-            <div>{rederCartList}</div>
+            <div className="w-1/2">{rederCartList}</div>
             <button className="border border-black rounded-xl w-fit px-3 py-2" onClick={checkOutGoods}>Check out</button>
         </div>
     );

@@ -8,9 +8,10 @@ export async function fetchGoods() {
         const { signer } = await connectWallet();
         const contract = getContract(signer);
         const goods = await contract.getGoods(); // Fetch the array of Good structs
-        const goodList = goods.map(good => {
+        const goodList = goods.map((good, index) => {
             // Map each Good struct to a JavaScript object
             return {
+                id: index,
                 name: good.name,
                 description: good.description,
                 price: Number(good.price), 

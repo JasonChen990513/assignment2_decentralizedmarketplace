@@ -20,7 +20,7 @@ export const Root = () => {
 
 
     const setSearchList = async() => {
-        console.log("into search function"); 
+        //console.log("into search function"); 
         const newPath = `/search/${keyWord}`;
         if(keyWord === "") {
             alert("Please input keyword");
@@ -29,11 +29,11 @@ export const Root = () => {
 
         if (window.location.pathname === newPath) {
             // If the current path starts with /search, reload the page
-            console.log("samepage");
+            //console.log("samepage");
             window.location.reload();
         } else {
             // If not, redirect to /search
-            console.log("not samepage");
+            //console.log("not samepage");
             navigate(newPath);
         }
     }

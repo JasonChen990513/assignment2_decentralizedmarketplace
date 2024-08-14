@@ -4,6 +4,7 @@ import { getContract, connectWallet, getTestContract } from "../util/contract";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchGoods } from "../hook/getGoods";
+import HomePageCard from "../component/homePageCard";
 
 function HomePage() {   
     const { setGood, search, filter } = useActionsCreator();
@@ -30,20 +31,15 @@ function HomePage() {
 
 
     const rederGoodList = goods?.map((good, index) => {
-        const comments = good.comment;
-        const rederCommentList = commentList(comments);
-
-
-        return <div key={index} className=" flex gap-2 p-2 m-2 hover:cursor-pointer" onClick={() => toGoodPage(index)}>
+        return <div key={index} onClick={() => toGoodPage(index)}>
+            <HomePageCard good={good} />
+            {/* <img src={good.image} className="w-20 h-20" alt={good.name}/>
             <div>{good.name}</div>
             <div>{good.description}</div>
             <div>{good.price}</div>
-            <div>{good.owner}</div>
             <div>{good.amount}</div>
             <div>{good.sellStatus}</div>
-            <img src={good.image} className="w-20 h-20"/>
-            <div>{good.categories}</div>
-            <div>{good.buyBefore}</div>
+            <div>{good.categories}</div> */}
         </div>
     })
 
@@ -70,7 +66,7 @@ function HomePage() {
     return (
         <div>
             <h1>homePage</h1>
-            <div>{rederGoodList}</div>
+            <div className="flex flex-col items-center">{rederGoodList}</div>
             <button></button>
         </div>
     );

@@ -38,16 +38,14 @@ function Profile() {
 
     const rederOwnGoodsList = goods?.map((good, index) => {
         if((good.owner).toLowerCase() === (address).toLowerCase()){
-            return <div key={index} className=" flex gap-2 p-2 m-2 cursor-pointer" onClick={() => toGoodPage(index)}>
+            return <div key={index} className=" flex gap-2 p-2 m-2 cursor-pointer items-center justify-center" onClick={() => toGoodPage(index)}>
+                <img src={good.image} className="w-20 h-20"/>
                 <div>{good.name}</div>
                 <div>{good.description}</div>
                 <div>{good.price}</div>
-                <div>{good.owner}</div>
                 <div>{good.amount}</div>
                 <div>{good.sellStatus}</div>
-                <img src={good.image} className="w-20 h-20"/>
                 <div>{good.categories}</div>
-                <div>{good.buyBefore}</div>
             </div>
 
         }else{

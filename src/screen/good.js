@@ -50,10 +50,12 @@ function Good() {
     const commentList = (comments) => {
         const commmentShow = comments?.map((comment, index) => {
             return (
-                <div key={index}>
-                    <div>Name: {comment.name}</div>
+                <div key={index} className=" text-start m-2">
+                    <div className="flex gap-2 my-2">
+                        <div>Name: {comment.name}</div>
+                        <div>{'⭐'.repeat(comment.star)}</div>
+                    </div>
                     <div>{comment.comment}</div>
-                    <div>Star: {comment.star}</div>
                 </div>
             )
         })
@@ -85,23 +87,33 @@ function Good() {
     const itemInfo = () => {
         if(goods[goodId] !== undefined) {
             return(
-                <section className=" text-center">   
-                    <div>Name: {goods[goodId].name}</div>
-                    <div>Description: {goods[goodId].description}</div>
-                    <div>Price: {goods[goodId].price}</div>
-                    <div>Owner: {goods[goodId].owner}</div>
-                    <div>Amount: {goods[goodId].amount}</div>
-                    <div>Sell Status: {goods[goodId].sellStatus ? "available" : "unavailable"}</div>
-                    <img src={goods[goodId].image} className="w-20 h-20"/>
-                    <div>Categories: {goods[goodId].categories}</div>
-                    <div>{goods[goodId].buyBefore}</div>
-                    <div className="">
-                        <input type="number" value={addAmount} onChange={(e) => setAddAmount(e.target.value)} className=" border border-black rounded-xl p-2 mx-2"/>
-                        <button onClick={handleAddCart}  className="border border-black rounded-xl w-fit px-3 py-2">Add to Cart</button>
-                    </div>
-                    
-                    <div>{rederCommentList}</div>
-                </section>
+                <div className="flex justify-center">
+                    <section className="flex flex-col text-center w-2/3">
+                        <div className="grid grid-cols-12">
+                            <div className="col-span-4">
+                                <img src={goods[goodId].image} className="w-60 h-60"/> 
+                            </div>
+                            <div className="col-span-8 text-start">
+                                <div>Name: {goods[goodId].name}</div>
+                                <div>Price: {goods[goodId].price}</div>
+                                <div>Owner Address: {goods[goodId].owner}</div>
+                                <div>Sell Status: {goods[goodId].sellStatus ? "available" : "unavailable"}</div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-12 ">
+                            <div className="col-span-6 text-start">{goods[goodId].description}</div>
+                            <div className="col-span-6">
+                                <input type="number" value={addAmount} onChange={(e) => setAddAmount(e.target.value)} className=" border border-black rounded-xl p-2 mx-2"/>
+                                <button onClick={handleAddCart}  className="border border-black rounded-xl w-fit px-3 py-2">Add to Cart</button>
+                            </div>
+                        </div>   
+                        <div>
+                            <div>Product Reviews</div>
+                            <div>{rederCommentList}</div>
+                        </div>
+                    </section>
+                </div>
+
             )
         }
     }
@@ -109,6 +121,7 @@ function Good() {
     const renderItem = itemInfo();
     
     const handleSubmit = async (e) => {
+        console.log('submit')
         e.preventDefault();
         const { signer } = await connectWallet();
         const contract = getContract(signer);
@@ -143,14 +156,17 @@ function Good() {
                 <input type="text" value={amount} onChange={e => setAmount(e.target.value)} className=" border border-black rounded-xl p-2"/>
                 <div>
                     <div>Sell Status: {sellStatus ? "available" : "unavailable"}</div>
-                    <button onClick={() => setSellStatus(!sellStatus)} className="border border-black rounded-xl w-fit px-3 py-2">Sell Status</button>
+                    <button onClick={(event) => {
+                        event.preventDefault();
+                        setSellStatus(!sellStatus);
+                        }} className="border border-black rounded-xl w-fit px-3 py-2">Sell Status</button>
                 </div>
                 <label>image</label>
                 <input type="text" value={image} onChange={e => setImage(e.target.value)} className=" border border-black rounded-xl p-2"/>
                 {image !== '' && 
                     <div>
                         <label>Image preview</label>
-                        <img src={image} className="w-20 h-20"/>
+                        <img src={image} className="w-20 h-20" alt="preview"/>
                     </div>
                 }
                 <label>category</label>
