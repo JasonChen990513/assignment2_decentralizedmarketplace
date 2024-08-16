@@ -267,6 +267,25 @@
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "items",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "getBuyTotalPrice",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "getCart",
         "outputs": [

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { getContract, connectWallet } from "../util/contract";
 import { useNavigate } from 'react-router-dom';
 import { categories } from "../const";
+import { ether } from "../const";
+import { parseEther } from "ethers";
 
 function AddGoods() {
     const [name, setName] = useState('');
@@ -11,14 +13,35 @@ function AddGoods() {
     const [image, setImage] = useState('');
     const [category, setCategory] = useState('');
     const navigate = useNavigate();
-    //const categories = ['Food', 'Electronics', 'Books', 'Clothing', 'Toys', 'Furniture', 'Other'];
+
+    const checkInput = () => {
+        if(name === '' || discription === '' || price === '' || amount === '' || image === '' || category === '') {
+
+            return false;
+        } 
+
+        try {
+            Number(price);
+        } catch (error) {
+            console.log("please put the number in price");
+            return false;
+        }
+
+        try {
+            Number(amount);
+        } catch (error) {
+            console.log("please put the number in amount");
+            return false;
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(name, discription, price, amount, image, category)
+        if(!checkInput()) return;
+        //console.log(name, discription, price, amount, image, category)
         const { signer } = await connectWallet();
         const contract = await getContract(signer);
-        contract.addGood(name, discription, price, amount, image, category)
+        contract.addGood(name, discription, parseEther(price), amount, image, category)
             .then(tx => {
                 // Wait for the transaction to be mined
                 return tx.wait();

@@ -14,9 +14,9 @@ function SearchResult() {
     const navigate = useNavigate();
     useEffect(() => {
         const initPage = async () => { 
-            console.log('initPage')
+            //console.log('initPage')
             const goods = await fetchGoods();
-            console.log(goods);
+            //console.log(goods);
             setGood(goods);
             search({keyword: keyword});
         } 
@@ -36,7 +36,7 @@ function SearchResult() {
     } 
 
     const SearchResult = () => {
-        console.log(isEmpty)
+        //console.log(isEmpty)
         if (isEmpty) {
             return <div className="text-center">No results found</div>
         } else{

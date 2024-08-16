@@ -50,7 +50,7 @@ export const Root = () => {
 
     const rederCategories = categories?.map((category, index) => {
         return (
-            <div key={index} className=" flex gap-2 p-2 m-2 cursor-pointer" onClick={() => navigate(`/search/${category}`)}>
+            <div key={index} className=" flex gap-2 p-2 m-2 cursor-pointer" onClick={() => navigate(`/categories/${category}`)}>
                 {category}
             </div>
         )

@@ -1,49 +1,61 @@
 import { useLoaderData } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchGoods } from "../hook/getGoods";
+import HomeCard from "../component/homePageCard";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useActionsCreator } from "../hook/useActionsCreator";
+
+
 
 
 function CategoriesResult() {
     const keyword = useLoaderData(); 
+    const { setGood, filter } = useActionsCreator();
+    const filteredGood = useSelector(state => state.good.filteredGood);
+    const isEmpty = filteredGood.length === 0;
+    const navigate = useNavigate();
 
-    const [selectedCategory, setSelectedCategory] = useState('');
+    useEffect(() => {
+        const initPage = async () => { 
+            //console.log('initPage')
+            const goods = await fetchGoods();
+            //console.log(goods);
+            setGood(goods);
+            filter({category: keyword});
+        } 
+        initPage();
+    } , [keyword])
 
-    const categories = ['Food', 'Electronics', 'Books', 'Clothing', 'Toys', 'Furniture', 'Other'];
+    const renderFilteredGood = filteredGood?.map((good, index) => {
+        return (
+            <div key={index} className=" flex gap-2 p-2 m-2 justify-center" onClick={() => toGoodPage(good.id)}>
+                <HomeCard good={good}/>
+            </div>
+        )
+    })
 
-    const handleChange = (event) => {
-        setSelectedCategory(event.target.value);
-    };
+    const toGoodPage = (goodId) => {
+        navigate(`/good/${goodId}`);
+    } 
+
+    const CategoriesResult = () => {
+        //console.log(isEmpty)
+        if (isEmpty) {
+            return <div className="text-center">No results found</div>
+        } else{
+            return <div>{renderFilteredGood}</div>
+        }
+    }
 
 
 
     return (
         <div>
-            <div>CategoriesResult</div>
-            <div>{keyword}</div>
-            <div className="category-selector">
-                <label htmlFor="category-dropdown" className="block mb-2 text-sm font-medium text-gray-900">
-                    Choose a Category
-                </label>
-                <select
-                    id="category-dropdown"
-                    value={selectedCategory}
-                    onChange={handleChange}
-                    className="block w-full p-2 border border-gray-300 rounded-lg"
-                >
-                    <option value="" disabled>Select a category</option>
-                    {categories.map((category, index) => (
-                        <option key={index} value={category}>
-                            {category}
-                        </option>
-                    ))}
-                </select>
-
-                {selectedCategory && (
-                    <div className="mt-4 text-lg">
-                        Selected Category: <strong>{selectedCategory}</strong>
-                    </div>
-                )}
-            </div>
+            <div>SearchResult</div>
+            <div>{CategoriesResult()}</div>
         </div>
+
     )
 }    
 export default CategoriesResult

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getContract, connectWallet } from "../util/contract";
 import { fetchGoods } from "../hook/getGoods";
 import { useNavigate } from "react-router-dom";
+import { ether } from "../const";
 
 function Profile() {
     const { setGood } = useActionsCreator();
@@ -11,6 +12,12 @@ function Profile() {
     const [address, setAddress] = useState('');
 
     const navigate = useNavigate();
+
+    window.ethereum?.on('accountsChanged', accounts => {
+		localStorage.setItem('address', accounts[0]);
+		setAddress(accounts?.length < 1 ? '' : accounts[0]);
+	});
+
 
     useEffect(() => {
         
@@ -21,7 +28,7 @@ function Profile() {
             //setGood(goodlist);
             //await GetGoods();
             const goods = await fetchGoods();
-            console.log(goods);
+            //console.log(goods);
             setAddress(account);
             setGood(goods);
 
@@ -38,14 +45,13 @@ function Profile() {
 
     const rederOwnGoodsList = goods?.map((good, index) => {
         if((good.owner).toLowerCase() === (address).toLowerCase()){
-            return <div key={index} className=" flex gap-2 p-2 m-2 cursor-pointer items-center justify-center" onClick={() => toGoodPage(index)}>
+            return <div key={index} className={`flex gap-6 w-2/3 p-2 m-2 items-center justify-center cursor-pointer ${!good.sellStatus ? 'opacity-50' : ''}`} onClick={() => toGoodPage(index)}>
+                
                 <img src={good.image} className="w-20 h-20"/>
                 <div>{good.name}</div>
-                <div>{good.description}</div>
-                <div>{good.price}</div>
-                <div>{good.amount}</div>
-                <div>{good.sellStatus}</div>
-                <div>{good.categories}</div>
+                <div>Price: {(good.price)/ether} SKY Token</div>
+                <div>Remain Amount: {good.amount}</div>
+                <div>Category: {good.categories}</div>
             </div>
 
         }else{
@@ -54,7 +60,7 @@ function Profile() {
     })
 
     return (
-        <div>   
+        <div className="flex flex-col items-center">   
             <h1>profile</h1>
             {rederOwnGoodsList}
         </div>
