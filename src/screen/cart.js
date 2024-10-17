@@ -120,18 +120,23 @@ function Cart () {
         let totalPrice = 0;
     
         //const cart = await contract.getCart();
-        console.log('in cart')
-        console.log(cart)
-
+        // console.log('in cart')
+        // console.log(cart.length)
+        // console.log(checkOut.length)
+        // console.log('this is check out 0' + checkOut[0])
         for(let i = 0; i < checkOut.length; i++){
             const price = Number(goods[checkOut[i]].price);
+            console.log(price)
+            //console.log('this is price ' + price)
             const amount = Number(cart[checkOut[i]].amount);
-            console.log(i)
-            console.log(price, amount)
+            console.log(amount)
+            // console.log('this is amount '+amount)
+            // console.log(i)
+            // console.log(price, amount)
             totalPrice += (price * amount);
         }
 
-        //console.log(totalPrice);
+        console.log(totalPrice);
         return totalPrice;
     }
 

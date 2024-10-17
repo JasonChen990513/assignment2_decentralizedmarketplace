@@ -35,7 +35,8 @@ function Good() {
     const [image, setImage] = useState('');
     const [category, setCategory] = useState('');
     const [sellStatus, setSellStatus] = useState(false);
-
+    const [imageUrl, setImageUrl] = useState('');
+    const [preview, setPreview] = useState('');
 
     useEffect(() => {
         const initPage = async () => {  
@@ -51,7 +52,8 @@ function Good() {
                 setAmount(goods[goodId].amount);
                 setSellStatus(goods[goodId].sellStatus);
                 setCategory(goods[goodId].categories);
-                setImage(goods[goodId].image);
+                setImageUrl(goods[goodId].image);
+                setPreview(goods[goodId].image);
             }
         } 
         initPage();
@@ -192,7 +194,7 @@ function Good() {
         e.preventDefault();
         const { signer } = await connectWallet();
         const contract = getContract(signer);
-        await contract.updateGood(goodId, name, discription, parseEther(price), amount, sellStatus, category, image)
+        await contract.updateGood(goodId, name, discription, parseEther(price), amount, sellStatus, category, imageUrl)
         .then(tx => {
             // Wait for the transaction to be mined
             return tx.wait();
@@ -207,6 +209,56 @@ function Good() {
 
         console.log('update')
     }
+
+    const handleImageChange = (event) => {
+        try {
+            const file = event.target.files[0];
+            setImage(file);
+        
+            // Generate image preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        } catch (error) {
+            console.log(error);   
+        }
+      };
+    
+      const handleUploadImage = async (event) => {
+            event.preventDefault();
+            
+            if (!image) {
+                alert('Please select an image to upload');
+                return;
+            }
+    
+            const formData = new FormData();
+    
+            //local server
+            formData.append('name', name); // direct set the product name here
+            formData.append('image', image);
+            console.log(image.name) // will include the .jpg
+            console.log(image)
+            try {
+            const response = await fetch('http://localhost:4000/upload', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const data = await response.json();
+            console.log(data)
+            console.log(data.imageUrl)
+            if (response.ok) {
+                setImageUrl(data.imageUrl);  // Set the image URL for display
+            } else {
+                alert('Image upload failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+        };
 
     const updateGoods = () => {
 
@@ -229,13 +281,15 @@ function Good() {
                         }} className="border border-black rounded-xl w-fit px-3 py-2">Sell Status</button>
                 </div>
                 <label>image</label>
-                <input type="text" value={image} onChange={e => setImage(e.target.value)} className=" border border-black rounded-xl p-2"/>
-                {image !== '' && 
-                    <div>
-                        <label>Image preview</label>
-                        <img src={image} className="w-20 h-20" alt="preview"/>
-                    </div>
-                }
+                <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} className=" border border-black rounded-xl p-2" placeholder="Can put link here or upload image to get the link"/>
+                <input type="file" accept="image/*" onChange={handleImageChange} />
+                <button onClick={handleUploadImage} className="border border-black rounded-xl w-fit px-3 py-2">Upload Image</button>
+                { preview && (
+                        <div>
+                            <h3>Uploaded Image:</h3>
+                            <img src={ preview } alt="Uploaded" style={{ width: '300px' }} />
+                        </div>
+                )}
                 <label>category</label>
                 <select
                         id="category-dropdown"

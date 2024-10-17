@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
-import { CONTRACT_ADDRESS, TOKEN_ADDRESS } from "../const";
-import { contractAbi, tokenAbi, testAbi } from "./abi";
+import { CONTRACT_ADDRESS, TOKEN_ADDRESS, NFT_ADDRESS } from "../const";
+import { contractAbi, tokenAbi, testAbi, NFTAbi } from "./abi";
 console.log()
 const abi = contractAbi;
 const TokenAbi = tokenAbi;
@@ -44,6 +44,12 @@ export const readOnlyContract = (provider) =>{
 export const getTokenContract = (signer) =>{
     return new ethers.Contract(TOKEN_ADDRESS, TokenAbi, signer);
 }
+
+export const getNFTContract = (signer) =>{
+    return new ethers.Contract(NFT_ADDRESS, NFTAbi, signer);
+}
+
+
 
 export const getTestContract = (signer) =>{
     return new ethers.Contract('0x0d237bb680a9f22208091e6B74847A537E209bf7', testAbi, signer);
